@@ -3,24 +3,34 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-
+use Twig\Environment;
 use App\Core\TemplateRenderer;
 use App\Entity\Film;
 use App\Repository\FilmRepository;
+use App\Service\EntityMapper;
+use Twig\Loader\FilesystemLoader;
 
 class FilmController
 {
     private TemplateRenderer $renderer;
+    private EntityMapper $entityMapper;
+    private Environment $twig;
+    private FilmRepository $filmRepository;
 
     public function __construct()
-    {
-        $this->renderer = new TemplateRenderer();
-    }
+{
+    $this->renderer = new TemplateRenderer();
+    $this->entityMapper = new EntityMapper();
+    $this->filmRepository = new FilmRepository();
+
+    
+    $loader = new FilesystemLoader(__DIR__ . '/../views');
+    $this->twig = new Environment($loader, ['cache' => false,]);
+}
 
     public function list(array $queryParams)
     {
-        $filmRepository = new FilmRepository();
-        $films = $filmRepository->findAll();
+        $films = $this->filmRepository->findAll();
 
         /* $filmEntities = [];
         foreach ($films as $film) {
@@ -47,26 +57,48 @@ class FilmController
         // echo json_encode($films);
     }
 
-    public function create()
+    public function create(): void
     {
-        echo "Création d'un film";
+
+        if (isset($_POST["ajout"])) {
+            $film=$this->entityMapper->mapToEntity($_POST,Film::class);
+            $this->filmRepository->create($film);
+
+            header('Location: /film/list');
+            exit();
+        }
+
+        echo $this->renderer->render('film/add.html.twig');
     }
+
+    public function update(array $queryParams): void
+    {
+        $film = $this->filmRepository->find((int) $queryParams['id']);
+        
+        if (isset($_POST['modif'])) {
+            
+            $film = $this->entityMapper->mapToEntity($_POST, Film::class);
+            
+            $this->filmRepository->update((int) $queryParams['id'], $film);
+            header('Location: /film/list');
+            exit();
+        }
+        echo $this->renderer->render('film/update.html.twig', ['film' => $film]);
+    }
+
+
 
     public function read(array $queryParams)
     {
-        $filmRepository = new FilmRepository();
-        $film = $filmRepository->find((int) $queryParams['id']);
-
-        dd($film);
+        $film = $this->filmRepository->find((int) $queryParams['id']);
+        echo $this->twig->render('film/details.html.twig', ['film' => $film,]);
+        
     }
 
-    public function update()
-    {
-        echo "Mise à jour d'un film";
-    }
+    public function delete(array $queryParams):void{
 
-    public function delete()
-    {
-        echo "Suppression d'un film";
+        $this->filmRepository->delete((int) $queryParams['id']);
+        header('Location: /film/list');
+        exit();
     }
 }

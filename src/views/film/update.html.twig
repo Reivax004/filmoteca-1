@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Modifier un Film{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+        <h1 class="mb-4">Modifier un Film</h1>
+        <form method="post" action="">
+            
+            <div class="mb-3">
+                <label for="titre" class="form-label">Titre</label>
+                <input type="text" class="form-control" id="titre" name="title" placeholder="Entrez le titre du film" required value="{{ film.title }}">
+            </div>
+            
+            <div class="mb-3">
+                <label for="annee" class="form-label">Année</label>
+                <input type="number" class="form-control" id="annee" name="year" placeholder="Entrez l'année de sortie" min="1900" max="2100" required value="{{ film.year }}">
+            </div>
+            
+            <div class="mb-3">
+                <label for="type" class="form-label">Type</label>
+                <input type="text" class="form-control" id="type" name="type" placeholder="Entrez le type de film (ex. Action, Comédie)" required value="{{ film.type }}">
+            </div>
+            
+            <div class="mb-3">
+                <label for="realisateur" class="form-label">Réalisateur</label>
+                <input type="text" class="form-control" id="realisateur" name="director" placeholder="Entrez le nom du réalisateur" required value="{{ film.director }}">
+            </div>
+            
+            <div class="mb-3">
+                <label for="synopsis" class="form-label">Synopsis</label>
+                <textarea class="form-control" id="synopsis" name="synopsis" rows="4" placeholder="Entrez le synopsis du film" required value="{{ film.synopsis }}"></textarea>
+            </div>
+            
+            <button type="submit" name="modif" class="btn btn-primary">Modifier le Film</button>
+        </form>
+    </div>
+
+
+{% endblock %}

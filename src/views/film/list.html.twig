@@ -21,6 +21,9 @@
                     <th>Synopsis</th>
                     <th>Ajouté le</th>
                     <th>Modifié le</th>
+                    <th>Détails</th>
+                    <th>Supprimer</th>
+                    <th>Modifier</th>
                 </tr>
             </thead>
 
@@ -35,6 +38,15 @@
                         <td>{{ film.synopsis }}</td>
                         <td>{{ film.createdAt.format('d/m/Y H:i') }}</td>
                         <td>{{ film.updatedAt.format('d/m/Y H:i') }}</td>
+                        <td class="text-center">
+                            <a href="/film/read?id={{film.id}}"> <i class="fa-solid fa-circle-info"></i></a>
+                        </td>
+                        <td class="text-center">
+                            <a href="/film/delete?id={{film.id}}"> <i class="fa-solid fa-trash"></i></a>
+                        </td>
+                        <td class="text-center">
+                            <a href="/film/update?id={{film.id}}"><i class="fa-solid fa-pencil"></i></a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
